@@ -24,9 +24,10 @@ object CombinatorParser extends StandardTokenParsers {
       case l ~ Some("%" ~ r) => Mod(l, r)
     }
 
-  /** factor ::= numericLit | "+" factor | "-" factor | "(" expr ")" */
+  /** factor ::= ident | numericLit | "+" factor | "-" factor | "(" expr ")" */
   def factor: Parser[Expr] = (
-    numericLit ^^ { case s => Constant(s.toInt) }
+    ident ^^ { case s => Identifier(s)}
+  |  numericLit ^^ { case s => Constant(s.toInt) }
   | "+" ~> factor ^^ { case e => e }
   | "-" ~> factor ^^ { case e => UMinus(e) }
   | "(" ~ expr ~ ")" ^^ { case _ ~ e ~ _ => e }
