@@ -33,6 +33,26 @@ object CombinatorParser extends StandardTokenParsers {
   | "(" ~ expr ~ ")" ^^ { case _ ~ e ~ _ => e }
   )
 
+  //statement   ::= expression ";" | assignment | conditional | loop | block
+  def statement: Parser[Expr] ={}
+
+
+  //ident ::= [a-zA-Z] [a-zA-Z0-9]*
+  def identifier: Parser[Expr]={}
+
+  //assignment  ::= ident "=" expression ";"
+  def assignment: Parser[Expr] ={}
+
+  //conditional ::= "if" "(" expression ")" block [ "else" block ]
+  def conditional: Parser[Expr] = {}
+
+  //loop ::= "while" "(" expression ")" block
+  def loop: Parser[Expr] ={}
+
+  //block ::= "{" statement* "}"
+  def block: Parser[Expr] = {}
+
+
   def parseAll[T](p: Parser[T], in: String): ParseResult[T] =
     phrase(p)(new lexical.Scanner(in))
 }
