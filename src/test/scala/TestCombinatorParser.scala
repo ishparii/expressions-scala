@@ -15,6 +15,8 @@ object MainCombinatorParser extends App {
 class TestCombinatorParser extends FunSuite {
   val parsedExpr = CombinatorParser.parseAll(CombinatorParser.expr, complex1string)
   val parsedExpr2 = CombinatorParser.parseAll(CombinatorParser.expr, complex1string2)
+  val parsedExpr3 = CombinatorParser.parseAll(CombinatorParser.expr, simpleAssignmentString)
   test("parser works 1") { assert(parsedExpr.get === complex1) }
   test("parser works 2") { assert(parsedExpr2.get === complex1) }
+  test("parser works 3") { assert(parsedExpr3.get === complexAssignmentString)}
 }

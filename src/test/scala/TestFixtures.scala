@@ -39,4 +39,17 @@ object TestFixtures {
       ),
       Constant(5)
     );
+
+  val simpleAssignmentString = "x = 5;"
+
+  val simpleAssignment = Assignment(
+    Identifier("x"),
+    Constant(5)
+  );
+
+  val complexAssignmentString = "x = 5 ; y = 7;"
+
+
+
+
 }
