@@ -44,8 +44,8 @@ object CombinatorParser extends StandardTokenParsers {
 
   /** assignment  ::= ident "=" expression ";" */
   def assignment: Parser[Expr] =
-    ident ~! "=" ~ expr ~ ";" ^^ {
-      case i ~ _ ~ e ~ _ => Assignment(Identifier(i), e)
+    ident ~ "=" ~ expr ~ ";" ^^ {
+      case i ~ "=" ~ e ~ ";" => Assignment(Identifier(i), e)
     }
 
 
