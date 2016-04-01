@@ -26,7 +26,7 @@ object CombinatorParser extends StandardTokenParsers {
 
   /** factor ::= ident | numericLit | "+" factor | "-" factor | "(" expr ")" */
   def factor: Parser[Expr] = (
-    ident ^^ { case s => Identifier(s)}
+    ident ^^ { case i => Identifier(i)}
   |  numericLit ^^ { case s => Constant(s.toInt) }
   | "+" ~> factor ^^ { case e => e }
   | "-" ~> factor ^^ { case e => UMinus(e) }

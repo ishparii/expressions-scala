@@ -43,6 +43,7 @@ object behaviors {
     case Div(l, r) => buildExprString(prefix, "Div", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
     case Mod(l, r) => buildExprString(prefix, "Mod", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
 
+    case Identifier(i) => prefix + i
     case Assignment(l, r) =>buildExprString(prefix, "Assignment", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
 
     case Conditional(guard, ifBranch, elseBranch) => buildConditionalString(prefix, "Conditional", guard, ifBranch, elseBranch: Option[Expr])
