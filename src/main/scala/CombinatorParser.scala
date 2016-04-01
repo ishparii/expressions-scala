@@ -52,14 +52,14 @@ object CombinatorParser extends StandardTokenParsers {
   /** conditional ::= "if" "(" expression ")" block [ "else" block ] */
   def conditional: Parser[Expr] =
     "if" ~ "{" ~ expr ~ "}" ~ block ~ opt( "else" ~ block ) ^^ {
-      case _ ~ _ ~ quard ~ _ ~ ifBranch ~ None => Conditional(quard, ifBranch)
-      case _ ~ _ ~ quard ~ _ ~ ifBranch ~ Some(_ ~ elseBranch) => Conditional(quard, ifBranch, Some(elseBranch))
+      case _ ~ _ ~ guard ~ _ ~ ifBranch ~ None => Conditional(guard, ifBranch)
+      case _ ~ _ ~ guard ~ _ ~ ifBranch ~ Some(_ ~ elseBranch) => Conditional(guard, ifBranch, Some(elseBranch))
     }
 
   /** loop ::= "while" "(" expression ")" block */
   def loop: Parser[Expr] =
     "while" ~ "(" ~ expr ~ ")" ~ block ^^ {
-      case _ ~ _ ~ quard ~ _ ~ body => Loop(quard, body)
+      case _ ~ _ ~ guard ~ _ ~ body => Loop(guard, body)
     }
 
   /** block ::= "{" statement* "}" */

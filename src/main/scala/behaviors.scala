@@ -36,12 +36,19 @@ object behaviors {
 
   def toFormattedString(prefix: String)(e: Expr): String = e match {
     case Constant(c) => prefix + c.toString
-    case UMinus(r)   => buildUnaryExprString(prefix, "UMinus", toFormattedString(prefix + INDENT)(r))
-    case Plus(l, r)  => buildExprString(prefix, "Plus", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
+    case UMinus(r) => buildUnaryExprString(prefix, "UMinus", toFormattedString(prefix + INDENT)(r))
+    case Plus(l, r) => buildExprString(prefix, "Plus", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
     case Minus(l, r) => buildExprString(prefix, "Minus", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
     case Times(l, r) => buildExprString(prefix, "Times", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
-    case Div(l, r)   => buildExprString(prefix, "Div", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
-    case Mod(l, r)   => buildExprString(prefix, "Mod", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
+    case Div(l, r) => buildExprString(prefix, "Div", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
+    case Mod(l, r) => buildExprString(prefix, "Mod", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
+
+    case Assignment(l, r) =>buildExprString(prefix, "Assignment", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
+
+    case Conditional(guard, ifBranch, elseBranch) => buildConditionalString(prefix, "Conditional", guard, ifBranch, elseBranch: Option[Expr])
+
+    case Loop(guard, body) => buildExprString(prefix, "Loop", toFormattedString(prefix + INDENT)(guard), toFormattedString(prefix + INDENT)(body))
+    case Block(expressions@_*) => buildBlockString(prefix, "Block", expressions: _*)
   }
 
   def toFormattedString(e: Expr): String = toFormattedString("")(e)
@@ -65,6 +72,28 @@ object behaviors {
     result.append("(")
     result.append(EOL)
     result.append(exprString)
+    result.append(")")
+    result.toString
+  }
+
+  def buildConditionalString(prefix: String, nodeString: String, guard: Expr, ifBranch: Expr, elseBranch: Option[Expr]) = {
+    val result = new StringBuilder(prefix).append(nodeString).append("(").append(EOL)
+    result.append(toFormattedString(prefix + INDENT)(guard))
+    result.append(", ")
+    result.append(EOL)
+    result.append(toFormattedString(prefix + INDENT)(ifBranch))
+    elseBranch.foreach((block: Expr) => {
+      result.append(",")
+      result.append(EOL)
+      result.append(toFormattedString(prefix + INDENT)(block))
+    })
+    result.append(")")
+    result.toString
+  }
+
+  def buildBlockString(prefix: String, nodeString: String, expressions: Expr*) = {
+    val result = new StringBuilder(prefix).append(nodeString).append("(").append(EOL)
+    result.append(expressions.map(expr => toFormattedString(prefix + INDENT)(expr)).mkString("," + EOL))
     result.append(")")
     result.toString
   }
