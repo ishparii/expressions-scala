@@ -12,7 +12,7 @@ case class Mod(left: Expr, right: Expr) extends Expr
 
 
 case class Block(expressions:Expr*) extends Expr
-case class Conditional(guard:Expr, ifBranch:Expr, elseBranch:Expr) extends Expr
+case class Conditional(guard:Expr, ifBranch:Expr, elseBranch:Option[Expr] = None) extends Expr
 case class Loop(guard:Expr, body:Expr) extends Expr
-case class Assignment(right:Expr, left:Identifier) extends Expr
+case class Assignment(left:Identifier, right:Expr) extends Expr
 case class Identifier(variable:String) extends Expr

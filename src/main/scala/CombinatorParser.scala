@@ -33,25 +33,40 @@ object CombinatorParser extends StandardTokenParsers {
   | "(" ~ expr ~ ")" ^^ { case _ ~ e ~ _ => e }
   )
 
-  //statement   ::= expression ";" | assignment | conditional | loop | block
-  def statement: Parser[Expr] ={}
+  /** statement   ::= expression ";" | assignment | conditional | loop | block */
+  def statement: Parser[Expr] = (
+    expr <~ ";" ^^ { case e => e }
+    | assignment ^^ { case a => a }
+    | conditional ^^ { case c => c}
+    | loop ^^ { case l => l}
+    | block ^^ { case b => b }
+    )
+
+  /** assignment  ::= ident "=" expression ";" */
+  def assignment: Parser[Expr] =
+    ident ~! "=" ~ expr ~ ";" ^^ {
+      case i ~ _ ~ e ~ _ => Assignment(Identifier(i), e)
+    }
 
 
-  //ident ::= [a-zA-Z] [a-zA-Z0-9]*
-  def identifier: Parser[Expr]={}
+  /** conditional ::= "if" "(" expression ")" block [ "else" block ] */
+  def conditional: Parser[Expr] =
+    "if" ~ "{" ~ expr ~ "}" ~ block ~ opt( "else" ~ block ) ^^ {
+      case _ ~ _ ~ quard ~ _ ~ ifBranch ~ None => Conditional(quard, ifBranch)
+      case _ ~ _ ~ quard ~ _ ~ ifBranch ~ Some(_ ~ elseBranch) => Conditional(quard, ifBranch, Some(elseBranch))
+    }
 
-  //assignment  ::= ident "=" expression ";"
-  def assignment: Parser[Expr] ={}
+  /** loop ::= "while" "(" expression ")" block */
+  def loop: Parser[Expr] =
+    "while" ~ "(" ~ expr ~ ")" ~ block ^^ {
+      case _ ~ _ ~ quard ~ _ ~ body => Loop(quard, body)
+    }
 
-  //conditional ::= "if" "(" expression ")" block [ "else" block ]
-  def conditional: Parser[Expr] = {}
-
-  //loop ::= "while" "(" expression ")" block
-  def loop: Parser[Expr] ={}
-
-  //block ::= "{" statement* "}"
-  def block: Parser[Expr] = {}
-
+  /** block ::= "{" statement* "}" */
+  def block: Parser[Expr] =
+    "{" ~ rep(statement) ~ "}" ^^ {
+      case _ ~ statements ~ _ => Block(statements:_*)
+    }
 
   def parseAll[T](p: Parser[T], in: String): ParseResult[T] =
     phrase(p)(new lexical.Scanner(in))
