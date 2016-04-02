@@ -26,7 +26,7 @@ object CombinatorParser extends StandardTokenParsers {
 
   /** factor ::= ident | numericLit | "+" factor | "-" factor | "(" expr ")" */
   def factor: Parser[Expr] = (
-    ident ^^ { case i => Identifier(i)}
+    ident ^^ { case i => Variable(i)}
   |  numericLit ^^ { case s => Constant(s.toInt) }
   | "+" ~> factor ^^ { case e => e }
   | "-" ~> factor ^^ { case e => UMinus(e) }
@@ -44,8 +44,8 @@ object CombinatorParser extends StandardTokenParsers {
 
   /** assignment  ::= ident "=" expression ";" */
   def assignment: Parser[Expr] =
-    ident ~ "=" ~ expr ~ ";" ^^ {
-      case i ~ "=" ~ e ~ ";" => Assignment(Identifier(i), e)
+    ident ~! "=" ~ expr ~ ";" ^^ {
+      case i ~ "=" ~ e ~ ";"  => Assignment(Variable(i), e)
     }
 
 
